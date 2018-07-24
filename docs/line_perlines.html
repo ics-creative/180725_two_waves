@@ -23,6 +23,9 @@
 
   <script src="libs/perlin.js"></script>
   <script>
+    // 外部から変更可能な値
+    var lineNum = 60; // ラインの数
+
     let stageW = 0;
     let stageH = 0;
 
@@ -58,7 +61,6 @@
       context.lineWidth = 3;
 
       const amplitude = stageH / 2; // 振幅（縦幅)の大きさ
-      const lineNum = 60; // ラインの数
       const segmentNum = 80; // 分割数
 
       [...new Array(lineNum).keys()].forEach(j => {
