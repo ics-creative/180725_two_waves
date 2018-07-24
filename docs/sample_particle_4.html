@@ -50,7 +50,7 @@
         this.vy = 0;
         this.life = 0;
         this.scale = 0;
-        this.data = `みなさん、単体テストは実施していますか？ そして、問題なく運用できていますか？――単体テストとは、テスティングフレームワークを使ったテストプログラムのことです。本稿ではJavaの開発でよく使用される、オープンソースのテスティングフレームワーク「JUnit」を用いた単体テストの失敗例と、それを回避するためのコツをお伝えします。さらに商用ツールである「Jtest」の「単体テストアシスタント」機能を活用して、テストをより効率的に実施するための方法も紹介します。`
+        this.data = `みなさん、単体テストは実施していますか？ そして、問題なく運用できていますか？――単体テストとは、テスティングフレームワークを使ったテストプログラムのことです。本稿ではJavaの開発でよく使用される、オープンソースのテスティングフレームワーク「JUnit」を用いた単体テストの失敗例と、それを回避するためのコツをお伝えします。さらに商用ツールである「Jtest」の「単体テストアシスタント」機能を活用して、テストをより効率的に実施するための方法も紹介します。`;
       }
     }
 
@@ -176,28 +176,17 @@
       }
     }
 
+    function toPool(particle) {
+      objectPool.unshift(particle);
+    }
 
-const MAX = 20;
-[...Array(MAX).keys()].forEach(i => {
-  // HSLカラーを算出
-  const hue = i * (360 / MAX);
-  const color = `hsl(${hue}, 100%, 50%)`;
-  // (省略)
-})
-
-const objectPool = []; // オブジェクトプール
-
-function toPool(particle) {
-  objectPool.unshift(particle);
-}
-
-function fromPool() {
-  if (objectPool.length === 0) {
-    return new Particle();
-  } else {
-    return objectPool.pop();
-  }
-}
+    function fromPool() {
+      if (objectPool.length === 0) {
+        return new Particle();
+      } else {
+        return objectPool.pop();
+      }
+    }
 
   </script>
 </body>

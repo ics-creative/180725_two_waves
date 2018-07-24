@@ -27,6 +27,7 @@
 
     let count = 0; // tick イベントの回数
     let particleSize = 0;// パーティクルのサイズ
+    let randomType = ['normal', 'center', 'center-strong', 'edge'][2];
     const MAX_LIFE = 50; // 寿命の最大値
     const PARTICLE_SIZE = 25;// パーティクルのサイズ（定数）
     const emitPerFrame = 10; // フレームあたりの粒子発生数
@@ -50,7 +51,6 @@
         this.vy = 0;
         this.life = 0;
         this.scale = 0;
-        this.data = `みなさん、単体テストは実施していますか？ そして、問題なく運用できていますか？――単体テストとは、テスティングフレームワークを使ったテストプログラムのことです。本稿ではJavaの開発でよく使用される、オープンソースのテスティングフレームワーク「JUnit」を用いた単体テストの失敗例と、それを回避するためのコツをお伝えします。さらに商用ツールである「Jtest」の「単体テストアシスタント」機能を活用して、テストをより効率的に実施するための方法も紹介します。`;
       }
     }
 
@@ -92,20 +92,12 @@
         count += 1;
         // オブジェクトの作成
         const particle = fromPool();
+
+        // 乱数を生成（0.0〜1.0）
+        const randomValue = createRandom(randomType);
+
         // パーティクルの発生場所
-// const valueA = (Math.random() + Math.random()) / 2;
-// const valueB = (Math.random() + Math.random()) / 2;
-// const value = (valueA + valueB) / 2;
-//
-//         const value = (Math.random() + Math.random()) / 2;
-
-        // 乗算の乱数
-const base = Math.random() * Math.random() * Math.random();
-const inverse = 1.0 - base;
-const value = Math.random() < 0.5 ? base : inverse;
-
-
-        particle.x = stageW * (value );
+        particle.x = stageW * (randomValue);
         particle.y = stageH * 3 / 4;
         // 動的にプロパティーを追加します。
         // 速度
@@ -117,11 +109,8 @@ const value = Math.random() < 0.5 ? base : inverse;
         // パーティクルのシェイプ
         particle.type = Math.floor(Math.random() * 2).toString();
 
-
         particles.push(particle);
       });
-
-
     }
 
     // パーティクルを更新します
@@ -152,7 +141,6 @@ const value = Math.random() < 0.5 ? base : inverse;
 
           // 配列からも削除
           particles.splice(i, 1);
-
         }
       }
     }
@@ -189,8 +177,6 @@ const value = Math.random() < 0.5 ? base : inverse;
 
     function toPool(particle) {
       objectPool.unshift(particle);
-
-
     }
 
     function fromPool() {
@@ -198,6 +184,28 @@ const value = Math.random() < 0.5 ? base : inverse;
         return new Particle();
       } else {
         return objectPool.pop();
+      }
+    }
+
+    function createRandom(randomType) {
+      switch (randomType) {
+        case 'center':
+          // 中央に配置
+          return (Math.random() + Math.random()) / 2;
+        case 'center-strong':
+          // さらに中央に配置
+          const valueA = (Math.random() + Math.random()) / 2;
+          const valueB = (Math.random() + Math.random()) / 2;
+          return (valueA + valueB) / 2;
+        case 'edge':
+          // 乗算の乱数
+          const base = Math.random() * Math.random() * Math.random();
+          const inverse = 1.0 - base;
+          return Math.random() < 0.5 ? base : inverse;
+        case 'normal':
+        default:
+          // 一様分布
+          return Math.random();
       }
     }
 
