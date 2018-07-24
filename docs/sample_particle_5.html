@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ja" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="google" content="notranslate" />
+  <title>Object Pool - ICS MEDIA</title>
+  <style>
+    body {
+      margin: 0;
+      height: 0;
+      overflow: hidden;
+    }
+
+    canvas {
+      width: 100vw;
+      height: 100vh;
+      background: black;
+    }
+  </style>
+</head>
+<body>
+  <canvas></canvas>
+
+  <script>
+    let stageW = 0;
+    let stageH = 0;
+
+    let count = 0; // tick イベントの回数
+    let particleSize = 0;// パーティクルのサイズ
+    const MAX_LIFE = 50; // 寿命の最大値
+    const PARTICLE_SIZE = 25;// パーティクルのサイズ（定数）
+    const emitPerFrame = 10; // フレームあたりの粒子発生数
+    const particles = []; // 配列でパーティクルを管理
+    const objectPool = []; // オブジェクトプール
+
+    const canvas = document.querySelector('canvas');
+    const context = canvas.getContext('2d');
+
+    /** パーティクルクラスです。 */
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+
+      /** 値を初期化します。 */
+      reset() {
+        this.x = 0;
+        this.y = 0;
+        this.vx = 0;
+        this.vy = 0;
+        this.life = 0;
+        this.scale = 0;
+        this.data = `みなさん、単体テストは実施していますか？ そして、問題なく運用できていますか？――単体テストとは、テスティングフレームワークを使ったテストプログラムのことです。本稿ではJavaの開発でよく使用される、オープンソースのテスティングフレームワーク「JUnit」を用いた単体テストの失敗例と、それを回避するためのコツをお伝えします。さらに商用ツールである「Jtest」の「単体テストアシスタント」機能を活用して、テストをより効率的に実施するための方法も紹介します。`;
+      }
+    }
+
+    resize();
+    tick();
+    window.addEventListener('resize', resize);
+
+
+    /** エンターフレームのタイミングです。 */
+    function tick() {
+      requestAnimationFrame(tick);
+
+      // パーティクルを発生
+      emitParticles();
+      // パーティクルを更新
+      updateParticles();
+      // console.log(objectPool.length)
+      // 画面を更新する
+      draw();
+    }
+
+    /** リサイズ時のイベントです。 */
+    function resize() {
+      stageW = innerWidth * devicePixelRatio;
+      stageH = innerHeight * devicePixelRatio;
+
+      canvas.width = stageW;
+      canvas.height = stageH;
+
+      particleSize = PARTICLE_SIZE * devicePixelRatio;
+    }
+
+
+    // パーティクルを発生させます
+    function emitParticles() {
+      // パーティクルの生成
+      [...Array(emitPerFrame).keys()].forEach(i => {
+        // カウントの更新
+        count += 1;
+        // オブジェクトの作成
+        const particle = fromPool();
+        // パーティクルの発生場所
+// const valueA = (Math.random() + Math.random()) / 2;
+// const valueB = (Math.random() + Math.random()) / 2;
+// const value = (valueA + valueB) / 2;
+//
+//         const value = (Math.random() + Math.random()) / 2;
+
+        // 乗算の乱数
+const base = Math.random() * Math.random() * Math.random();
+const inverse = 1.0 - base;
+const value = Math.random() < 0.5 ? base : inverse;
+
+
+        particle.x = stageW * (value );
+        particle.y = stageH * 3 / 4;
+        // 動的にプロパティーを追加します。
+        // 速度
+        particle.vx = 10 * (Math.random() - 0.5);
+        particle.vy = 30 * (Math.random() - 0.5);
+        // 寿命
+        particle.life = MAX_LIFE;
+
+        // パーティクルのシェイプ
+        particle.type = Math.floor(Math.random() * 2).toString();
+
+
+        particles.push(particle);
+      });
+
+
+    }
+
+    // パーティクルを更新します
+    function updateParticles() {
+      // パーティクルの計算を行う
+      for (let i = 0; i < particles.length; i++) {
+        // オブジェクトの作成
+        const particle = particles[i];
+        // 重力
+        particle.vy -= 1;
+        // 摩擦
+        particle.vx *= 0.92;
+        particle.vy *= 0.92;
+        // 速度を位置に適用
+        particle.x += particle.vx;
+        particle.y += particle.vy;
+
+
+        // パーティクルのサイズをライフ依存にする
+        const scale = particle.life / MAX_LIFE;
+        particle.scale = scale;
+        // 寿命を減らす
+        particle.life -= 1;
+        // 寿命の判定
+        if (particle.life <= 0) {
+          particle.reset();
+          toPool(particle);
+
+          // 配列からも削除
+          particles.splice(i, 1);
+
+        }
+      }
+    }
+
+
+    /** 描画します。 */
+    function draw(time) {
+      // 画面をリセット
+      context.clearRect(0, 0, stageW, stageH);
+      context.globalCompositeOperation = 'lighter';
+
+      particles.forEach(particle => {
+        context.restore();
+
+        switch (particle.type) {
+          case '0':
+            context.beginPath();
+            context.fillStyle = `hsla(0, 0%, 50%, ${Math.random() * 0.2 + 0.8})`;
+            context.arc(particle.x, particle.y, particle.scale * particleSize, 0, Math.PI * 2, false);
+            context.fill();
+            context.closePath();
+            break;
+          case '1':
+            context.beginPath();
+            context.strokeStyle = `hsla(0, 0%, 50%, ${Math.random() * 0.2 + 0.8})`;
+            context.lineWidth = 5;
+            context.arc(particle.x, particle.y, particle.scale * particleSize, 0, Math.PI * 2, false);
+            context.stroke();
+            context.closePath();
+            break;
+        }
+      });
+    }
+
+    function toPool(particle) {
+      objectPool.unshift(particle);
+
+
+    }
+
+    function fromPool() {
+      if (objectPool.length === 0) {
+        return new Particle();
+      } else {
+        return objectPool.pop();
+      }
+    }
+
+  </script>
+</body>
+</html>

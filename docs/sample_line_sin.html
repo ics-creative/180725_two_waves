@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja" dir="ltr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="google" content="notranslate" />
+  <title>Sample - ICS MEDIA</title>
+  <style>
+    body {
+      margin: 0;
+      height: 0;
+      overflow: hidden;
+    }
+
+    canvas {
+      width: 100vw;
+      height: 100vh;
+      background: black;
+    }
+  </style>
+</head>
+<body>
+  <canvas></canvas>
+
+  <script>
+    let stageW = 0;
+    let stageH = 0;
+
+    const canvas = document.querySelector('canvas');
+    const context = canvas.getContext('2d');
+
+    resize();
+    tick();
+    window.addEventListener('resize', resize);
+
+    /** エンターフレームのタイミングです。 */
+    function tick() {
+      requestAnimationFrame(tick);
+      const time = Date.now() / 1000;
+      draw(time);
+    }
+
+    /** リサイズ時のイベントです。 */
+    function resize() {
+      stageW = innerWidth * devicePixelRatio;
+      stageH = innerHeight * devicePixelRatio;
+
+      canvas.width = stageW;
+      canvas.height = stageH;
+    }
+
+    /** 描画します。 */
+    function draw(time) {
+      // 画面をリセット
+      context.clearRect(0, 0, stageW, stageH);
+      context.lineWidth = 10;
+      context.beginPath();
+      context.strokeStyle = `white`;
+
+      const segmentNum = 100; // 分割数
+      const amplitude = stageH / 3; // 振幅
+
+      [...Array(segmentNum).keys()].forEach(i => {
+        const x = i / (segmentNum - 1) * stageW;
+        const radian = i / segmentNum * Math.PI + time;
+        const y = amplitude * Math.sin(radian) + stageH / 2;
+
+        if (i === 0) {
+          context.moveTo(x, y);
+        } else {
+          context.lineTo(x, y);
+        }
+      });
+      context.stroke();
+    }
+  </script>
+</body>
+</html>

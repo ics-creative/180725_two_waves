@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja" dir="ltr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="google" content="notranslate" />
+  <title>Sample - ICS MEDIA</title>
+  <style>
+    body {
+      margin: 0;
+      height: 0;
+      overflow: hidden;
+    }
+
+    canvas {
+      width: 100vw;
+      height: 100vh;
+      background: black;
+    }
+  </style>
+</head>
+<body>
+  <canvas></canvas>
+
+  <script src="../node_modules/simplenoise/perlin.js"></script>
+  <script>
+    let stageW = 0;
+    let stageH = 0;
+
+    const canvas = document.querySelector('canvas');
+    const context = canvas.getContext('2d');
+
+    noise.seed(Math.random());
+
+    resize();
+    tick();
+    window.addEventListener('resize', resize);
+
+    /** エンターフレームのタイミングです。 */
+    function tick() {
+      requestAnimationFrame(tick);
+      const time = Date.now() / 4000;
+      draw(time);
+    }
+
+    /** リサイズ時のイベントです。 */
+    function resize() {
+      stageW = innerWidth * devicePixelRatio;
+      stageH = innerHeight * devicePixelRatio;
+
+      canvas.width = stageW;
+      canvas.height = stageH;
+    }
+
+    /** 描画します。 */
+    function draw(time) {
+      // 画面をリセット
+      context.clearRect(0, 0, stageW, stageH);
+      context.lineWidth = 2;
+
+      const amplitude = stageH / 2; // 振幅（縦幅)の大きさ
+      const lineNum = 80; // ラインの数
+      const segmentNum = 80; // 分割数
+
+      [...new Array(lineNum).keys()].forEach(j => {
+        const coefficient = 50 + j;
+
+        context.beginPath();
+
+  const h = Math.round(j / lineNum * 360); // 色相
+  const s = 100; // 彩度
+  const l = Math.round(j / lineNum * 100); // 明度
+  context.strokeStyle = `hsl(${h}, ${s}%, ${l}%)`;
+
+        [...new Array(segmentNum).keys()].forEach(i => {
+
+          const x = i / (segmentNum - 1) * stageW;
+
+          const px = i / coefficient;
+          const py = (j / 50 + time);
+          const y = amplitude * noise.perlin2(px, py) + stageH / 2;
+
+          if (i === 0) {
+            context.moveTo(x, y);
+          } else {
+            context.lineTo(x, y);
+          }
+        });
+        context.stroke();
+      });
+    }
+  </script>
+</body>
+</html>

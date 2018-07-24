@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="google" content="notranslate" />
+  <title>Sample - ICS MEDIA</title>
+  <style>
+    body {
+      margin: 0;
+      height: 0;
+      overflow: hidden;
+    }
+
+    canvas {
+      width: 100vw;
+      height: 100vh;
+      background: black;
+    }
+  </style>
+</head>
+<body>
+  <canvas></canvas>
+
+  <script>
+    let stageW = 0;
+    let stageH = 0;
+
+    let count = 0; // tick イベントの回数
+    let MAX_LIFE = 100; // 寿命の最大値
+    const particles = []; // 配列でパーティクルを管理
+
+    const canvas = document.querySelector('canvas');
+    const context = canvas.getContext('2d');
+
+    resize();
+    tick();
+    window.addEventListener('resize', resize);
+
+    /** エンターフレームのタイミングです。 */
+    function tick() {
+      requestAnimationFrame(tick);
+
+      // パーティクルを更新
+      updateParticles();
+      // 画面を更新する
+      draw();
+    }
+
+    // パーティクルを発生
+    emitParticles();
+    setInterval(emitParticles, 1500)
+
+    /** リサイズ時のイベントです。 */
+    function resize() {
+      stageW = innerWidth * devicePixelRatio;
+      stageH = innerHeight * devicePixelRatio;
+
+      canvas.width = stageW;
+      canvas.height = stageH;
+    }
+
+
+    // パーティクルを発生させます
+    function emitParticles() {
+      // パーティクルの生成
+      for (let i = 0; i < 1; i++) {
+        // カウントの更新
+        count += 1;
+        // オブジェクトの作成
+        const particle = {};
+        // パーティクルの発生場所
+        particle.x = stageW * 0.5;
+        particle.y = stageH * 4 / 5;
+        // 動的にプロパティーを追加します。
+        // 速度
+        particle.vx = 0;
+        particle.vy = 0;
+        // 寿命
+        particle.life = MAX_LIFE;
+
+
+        particles.push(particle);
+      }
+    }
+
+    // パーティクルを更新します
+    function updateParticles() {
+      // パーティクルの計算を行う
+      for (let i = 0; i < particles.length; i++) {
+        // オブジェクトの作成
+        const particle = particles[i];
+        // 重力
+        particle.vy -= 1;
+        // 摩擦
+        particle.vx *= 0.92;
+        particle.vy *= 0.92;
+        // 速度を位置に適用
+        particle.x += particle.vx;
+        particle.y += particle.vy;
+
+        // パーティクルのサイズをライフ依存にする
+        const scale = particle.life / MAX_LIFE;
+        particle.scale = scale;
+        // 寿命を減らす
+        particle.life -= 1;
+        // 寿命の判定
+        if (particle.life <= 0) {
+          // 配列からも削除
+          particles.splice(i, 1);
+        }
+      }
+    }
+
+
+    /** 描画します。 */
+    function draw(time) {
+      // 画面をリセット
+      context.clearRect(0, 0, stageW, stageH);
+      context.globalCompositeOperation = 'lighter';
+
+      particles.forEach(particle => {
+        context.beginPath();
+        context.fillStyle = `white`;
+        context.arc(particle.x, particle.y, particle.scale * 100, 0, Math.PI * 2, false);
+        context.fill();
+        context.closePath();
+      });
+    }
+  </script>
+</body>
+</html>
