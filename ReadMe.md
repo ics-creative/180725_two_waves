@@ -2,7 +2,7 @@
 
 - [Line](https://ics-creative.github.io/180725_two_waves/line.html)
 - [Line Math.sin()](https://ics-creative.github.io/180725_two_waves/line_sin.html)
-- [Line Math.sin() - many](https://ics-creative.github.io/180725_two_waves/line_sin2.html)
+- [Line Math.sin() - many colorful](https://ics-creative.github.io/180725_two_waves/line_sin_colorful.html)
 - [Line PerlinNoise](https://ics-creative.github.io/180725_two_waves/line_perline.html)
 - [Line PerlinNoise - many](https://ics-creative.github.io/180725_two_waves/line_perlines.html)
 - [Line PerlinNoise - many colorful](https://ics-creative.github.io/180725_two_waves/line_perlines_colorful.html)
