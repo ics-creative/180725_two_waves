@@ -21,7 +21,6 @@
 <body>
   <canvas></canvas>
 
-  <script src="libs/perlin.js"></script>
   <script>
     let stageW = 0; // 画面の幅
     let stageH = 0; // 画面の高さ
@@ -31,8 +30,6 @@
     // 2Dの描画命令群を取得
     const context = canvas.getContext('2d');
 
-    noise.seed(Math.random());
-
     resize();
     tick();
     window.addEventListener('resize', resize);
@@ -40,30 +37,31 @@
     /** エンターフレームのタイミングです。 */
     function tick() {
       requestAnimationFrame(tick);
-      const time = Date.now() / 4000;
-      draw(time);
+      draw();
     }
 
+
     /** 描画します。 */
-    function draw(time) {
+    function draw() {
       // 画面をリセット
       context.clearRect(0, 0, stageW, stageH);
       context.lineWidth = 10;
-
-      const amplitude = stageH / 2; // 振幅（縦幅)の大きさ
-      const segmentNum = 80; // 分割数
-
       context.beginPath();
       context.strokeStyle = `white`;
 
+      const segmentNum = 5;　// 分割数
+      const amplitude = stageH / 3; // 振幅
+      const time = Date.now() / 1000; // 媒介変数(時間)
+
       [...Array(segmentNum).keys()].forEach(i => {
-
+        // X座標
         const x = i / (segmentNum - 1) * stageW;
+        // ラジアン
+        const radian = i / segmentNum * Math.PI + time;
+        // Y座標
+        const y = amplitude * Math.sin(radian) + stageH / 2;
 
-        const px = i / 50; // 横軸の入力値
-        const py = time; // 時間の入力値
-        const y = amplitude * noise.perlin2(px, py) + stageH / 2;
-
+        // 線を描く
         if (i === 0) {
           context.moveTo(x, y);
         } else {
@@ -72,6 +70,7 @@
       });
       context.stroke();
     }
+
 
     /** リサイズ時のイベントです。 */
     function resize() {

@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="ja" dir="ltr">
+<html>
 <head>
   <meta charset="UTF-8"/>
-  <meta name="google" content="notranslate" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sample - ICS MEDIA</title>
   <style>
@@ -23,13 +22,12 @@
   <canvas></canvas>
 
   <script>
-    // 外部から変更可能な動的変数
-    var segmentNum = 100;
+    let stageW = 0; // 画面の幅
+    let stageH = 0; // 画面の高さ
 
-    let stageW = 0;
-    let stageH = 0;
-
+    // canvas要素の参照を取得
     const canvas = document.querySelector('canvas');
+    // 2Dの描画命令群を取得
     const context = canvas.getContext('2d');
 
     resize();
@@ -39,9 +37,40 @@
     /** エンターフレームのタイミングです。 */
     function tick() {
       requestAnimationFrame(tick);
-      const time = Date.now() / 1000;
-      draw(time);
+      draw();
     }
+
+
+    /** 描画します。 */
+    function draw() {
+      // 画面をリセット
+      context.clearRect(0, 0, stageW, stageH);
+      context.lineWidth = 10;
+      context.beginPath();
+      context.strokeStyle = `white`;
+
+      const segmentNum = 100;　// 分割数
+      const amplitude = stageH / 3; // 振幅
+      const time = Date.now() / 1000; // 媒介変数(時間)
+
+      [...Array(segmentNum).keys()].forEach(i => {
+        // X座標
+        const x = i / (segmentNum - 1) * stageW;
+        // ラジアン
+        const radian = i / segmentNum * Math.PI + time;
+        // Y座標
+        const y = amplitude * Math.sin(radian) + stageH / 2;
+
+        // 線を描く
+        if (i === 0) {
+          context.moveTo(x, y);
+        } else {
+          context.lineTo(x, y);
+        }
+      });
+      context.stroke();
+    }
+
 
     /** リサイズ時のイベントです。 */
     function resize() {
@@ -50,30 +79,6 @@
 
       canvas.width = stageW;
       canvas.height = stageH;
-    }
-
-    /** 描画します。 */
-    function draw(time) {
-      // 画面をリセット
-      context.clearRect(0, 0, stageW, stageH);
-      context.lineWidth = 10;
-      context.beginPath();
-      context.strokeStyle = `white`;
-
-      const amplitude = stageH / 3; // 振幅
-
-      [...Array(segmentNum).keys()].forEach(i => {
-        const x = i / (segmentNum - 1) * stageW;
-        const radian = i / segmentNum * Math.PI + time;
-        const y = amplitude * Math.sin(radian) + stageH / 2;
-
-        if (i === 0) {
-          context.moveTo(x, y);
-        } else {
-          context.lineTo(x, y);
-        }
-      });
-      context.stroke();
     }
   </script>
 </body>

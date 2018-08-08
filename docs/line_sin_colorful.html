@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="ja" dir="ltr">
+<html>
 <head>
   <meta charset="UTF-8"/>
-  <meta name="google" content="notranslate" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sample - ICS MEDIA</title>
   <style>
@@ -23,10 +22,12 @@
   <canvas></canvas>
 
   <script>
-    let stageW = 0;
-    let stageH = 0;
+    let stageW = 0; // 画面の幅
+    let stageH = 0; // 画面の高さ
 
+    // canvas要素の参照を取得
     const canvas = document.querySelector('canvas');
+    // 2Dの描画命令群を取得
     const context = canvas.getContext('2d');
 
     resize();
@@ -38,15 +39,6 @@
       requestAnimationFrame(tick);
       const time = Date.now() / 1000;
       draw(time);
-    }
-
-    /** リサイズ時のイベントです。 */
-    function resize() {
-      stageW = innerWidth * devicePixelRatio;
-      stageH = innerHeight * devicePixelRatio;
-
-      canvas.width = stageW;
-      canvas.height = stageH;
     }
 
     /** 描画します。 */
@@ -79,6 +71,15 @@
         });
         context.stroke();
       });
+    }
+
+    /** リサイズ時のイベントです。 */
+    function resize() {
+      stageW = innerWidth * devicePixelRatio;
+      stageH = innerHeight * devicePixelRatio;
+
+      canvas.width = stageW;
+      canvas.height = stageH;
     }
   </script>
 </body>
