@@ -51,11 +51,11 @@
       const amplitude = stageH / 3;
       const lineNum = 10;
 
-      [...new Array(lineNum).keys()].forEach(j => {
+      [...Array(lineNum).keys()].forEach(j => {
 
         context.beginPath();
 
-        [...new Array(segmentNum).keys()].forEach(i => {
+        [...Array(segmentNum).keys()].forEach(i => {
 
           const x = i / (segmentNum - 1) * stageW;
           const radian = ((i + j) / segmentNum) * Math.PI + time;

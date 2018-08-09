@@ -49,13 +49,13 @@
     function draw(time) {
       // 画面をリセット
       context.clearRect(0, 0, stageW, stageH);
-      context.lineWidth = 2;
+      context.lineWidth = 1;
 
       const amplitude = stageH / 2; // 振幅（縦幅)の大きさ
-      const lineNum = 80; // ラインの数
-      const segmentNum = 80; // 分割数
+      const lineNum = 150; // ラインの数
+      const segmentNum = 150; // 分割数
 
-      [...new Array(lineNum).keys()].forEach(j => {
+      [...Array(lineNum).keys()].forEach(j => {
         const coefficient = 50 + j;
 
         context.beginPath();
@@ -65,7 +65,7 @@
         const l = Math.round(j / lineNum * 100); // 明度
         context.strokeStyle = `hsl(${h}, ${s}%, ${l}%)`;
 
-        [...new Array(segmentNum).keys()].forEach(i => {
+        [...Array(segmentNum).keys()].forEach(i => {
 
           const x = i / (segmentNum - 1) * stageW;
 

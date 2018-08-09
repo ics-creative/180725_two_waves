@@ -23,8 +23,7 @@
 
   <script src="libs/perlin.js"></script>
   <script>
-    // 外部から変更可能な値
-    var lineNum = 60; // ラインの数
+
 
     let stageW = 0; // 画面の幅
     let stageH = 0; // 画面の高さ
@@ -51,10 +50,11 @@
     function draw(time) {
       // 画面をリセット
       context.clearRect(0, 0, stageW, stageH);
-      context.lineWidth = 3;
+      context.lineWidth = 1;
 
       const amplitude = stageH / 2; // 振幅（縦幅)の大きさ
-      const segmentNum = 80; // 分割数
+      const lineNum = 150; // ラインの数
+      const segmentNum = 150; // 分割数
 
       [...new Array(lineNum).keys()].forEach(j => {
         const coefficient = 50 + j;
