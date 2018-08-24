@@ -26,7 +26,6 @@
     let stageW = 0;
     let stageH = 0;
 
-    let count = 0; // tick イベントの回数
     let particleSize = 0;// パーティクルのサイズ
     const MAX_LIFE = 50; // 寿命の最大値
     const PARTICLE_SIZE = 25;// パーティクルのサイズ（定数）
@@ -62,9 +61,9 @@
       requestAnimationFrame(tick);
 
       // パーティクルを発生
-      emitParticles();
+      emit();
       // パーティクルを更新
-      updateParticles();
+      update();
       // 画面を更新する
       draw();
     }
@@ -82,11 +81,9 @@
 
 
     // パーティクルを発生させます
-    function emitParticles() {
+    function emit() {
       // パーティクルの生成
       for (let i = 0; i < emitPerFrame; i++) {
-        // カウントの更新
-        count += 1;
         // オブジェクトの作成
         const particle = new Particle();
         // パーティクルの発生場所
@@ -94,7 +91,6 @@
         particle.y = stageH * 3 / 4;
         // 動的にプロパティーを追加します。
         // 速度
-        particle.vx = 10 * (Math.random() - 0.5);
         particle.vy = 30 * (Math.random() - 0.5);
         // 寿命
         particle.life = MAX_LIFE;
@@ -108,7 +104,7 @@
     }
 
     // パーティクルを更新します
-    function updateParticles() {
+    function update() {
       // パーティクルの計算を行う
       for (let i = 0; i < particles.length; i++) {
         // オブジェクトの作成
@@ -116,10 +112,8 @@
         // 重力
         particle.vy -= 1;
         // 摩擦
-        particle.vx *= 0.92;
         particle.vy *= 0.92;
         // 速度を位置に適用
-        particle.x += particle.vx;
         particle.y += particle.vy;
 
 
@@ -137,7 +131,7 @@
     }
 
 
-    /** 描画します。 */
+    // 描画します
     function draw(time) {
       // 画面をリセット
       context.clearRect(0, 0, stageW, stageH);
@@ -150,6 +144,7 @@
         context.beginPath();
         context.arc(particle.x, particle.y, particle.scale * particleSize, 0, Math.PI * 2, false);
 
+        // 点滅ロジック
         const alpha = Math.random() * 0.2 + 0.8;
 
         switch (particle.type) {

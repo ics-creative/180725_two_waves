@@ -49,7 +49,7 @@
 
     // パーティクルを発生
     emitParticles();
-    setInterval(emitParticles, 1500)
+    setInterval(emitParticles, 1500);
 
     /** リサイズ時のイベントです。 */
     function resize() {
@@ -63,25 +63,17 @@
 
     // パーティクルを発生させます
     function emitParticles() {
-      // パーティクルの生成
-      for (let i = 0; i < 1; i++) {
-        // カウントの更新
-        count += 1;
-        // オブジェクトの作成
-        const particle = {};
-        // パーティクルの発生場所
-        particle.x = stageW * 0.5;
-        particle.y = stageH * 4 / 5;
-        // 動的にプロパティーを追加します。
-        // 速度
-        particle.vx = 0;
-        particle.vy = 0;
-        // 寿命
-        particle.life = MAX_LIFE;
+      // オブジェクトの作成
+      const particle = {
+        x: stageW * 0.5, // パーティクルの発生場所(X)
+        y: stageH * 4 / 5, // パーティクルの発生場所(Y)
+        vy: 0, // 速度
+        life: MAX_LIFE, // 寿命
+        scale: 1, // スケール
+      };
 
-
-        particles.push(particle);
-      }
+      // 配列に保存
+      particles.push(particle);
     }
 
     // パーティクルを更新します
@@ -93,10 +85,8 @@
         // 重力
         particle.vy -= 1;
         // 摩擦
-        particle.vx *= 0.92;
         particle.vy *= 0.92;
         // 速度を位置に適用
-        particle.x += particle.vx;
         particle.y += particle.vy;
 
         // パーティクルのサイズをライフ依存にする
@@ -113,16 +103,18 @@
     }
 
 
-    /** 描画します。 */
-    function draw(time) {
+    // 描画します
+    function draw() {
       // 画面をリセット
       context.clearRect(0, 0, stageW, stageH);
-      context.globalCompositeOperation = 'lighter';
 
       particles.forEach(particle => {
         context.beginPath();
+        // 白い色を設定
         context.fillStyle = `white`;
-        context.arc(particle.x, particle.y, particle.scale * 100, 0, Math.PI * 2, false);
+        // 円を描く
+        context.arc(particle.x, particle.y, 50 * particle.scale, 0, Math.PI * 2, false);
+        // 形状に沿って塗る
         context.fill();
         context.closePath();
       });

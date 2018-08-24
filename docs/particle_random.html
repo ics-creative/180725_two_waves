@@ -26,12 +26,19 @@
     let stageW = 0;
     let stageH = 0;
 
-    let count = 0; // tick イベントの回数
     let particleSize = 0;// パーティクルのサイズ
-    let randomType = ['normal', 'center', 'center-strong', 'edge'][2];
+    const TYPE = ['normal', 'center', 'center-strong', 'edge'];
+    let randomType = TYPE[0]; // デフォルト
+
+    // ハッシュからランダム計算方法を切り替える
+    if (location.hash) {
+      const id = Number(location.hash.split('#').join(''));
+      randomType = TYPE[id];
+    }
+
     const MAX_LIFE = 50; // 寿命の最大値
     const PARTICLE_SIZE = 25;// パーティクルのサイズ（定数）
-    const emitPerFrame = 10; // フレームあたりの粒子発生数
+    const emitPerFrame = 2; // フレームあたりの粒子発生数
     const particles = []; // 配列でパーティクルを管理
     const objectPool = []; // オブジェクトプール
 
@@ -65,10 +72,9 @@
       requestAnimationFrame(tick);
 
       // パーティクルを発生
-      emitParticles();
+      emit();
       // パーティクルを更新
-      updateParticles();
-      // console.log(objectPool.length)
+      update();
       // 画面を更新する
       draw();
     }
@@ -86,11 +92,9 @@
 
 
     // パーティクルを発生させます
-    function emitParticles() {
+    function emit() {
       // パーティクルの生成
       [...Array(emitPerFrame).keys()].forEach(i => {
-        // カウントの更新
-        count += 1;
         // オブジェクトの作成
         const particle = fromPool();
 
@@ -102,7 +106,6 @@
         particle.y = stageH * 3 / 4;
         // 動的にプロパティーを追加します。
         // 速度
-        particle.vx = 10 * (Math.random() - 0.5);
         particle.vy = 30 * (Math.random() - 0.5);
         // 寿命
         particle.life = MAX_LIFE;
@@ -115,7 +118,7 @@
     }
 
     // パーティクルを更新します
-    function updateParticles() {
+    function update() {
       // パーティクルの計算を行う
       for (let i = 0; i < particles.length; i++) {
         // オブジェクトの作成
@@ -123,10 +126,8 @@
         // 重力
         particle.vy -= 1;
         // 摩擦
-        particle.vx *= 0.92;
         particle.vy *= 0.92;
         // 速度を位置に適用
-        particle.x += particle.vx;
         particle.y += particle.vy;
 
 
@@ -147,7 +148,7 @@
     }
 
 
-    /** 描画します。 */
+    // 描画します
     function draw(time) {
       // 画面をリセット
       context.clearRect(0, 0, stageW, stageH);
@@ -156,23 +157,23 @@
       particles.forEach(particle => {
         context.restore();
 
+        // 点滅ロジック
+        const alpha = Math.random() * 0.2 + 0.8;
+        context.beginPath();
+        context.arc(particle.x, particle.y, particle.scale * particleSize, 0, Math.PI * 2, false);
+
         switch (particle.type) {
           case '0':
-            context.beginPath();
-            context.fillStyle = `hsla(0, 0%, 50%, ${Math.random() * 0.2 + 0.8})`;
-            context.arc(particle.x, particle.y, particle.scale * particleSize, 0, Math.PI * 2, false);
+            context.fillStyle = `hsla(0, 0%, 50%, ${alpha})`;
             context.fill();
-            context.closePath();
             break;
           case '1':
-            context.beginPath();
-            context.strokeStyle = `hsla(0, 0%, 50%, ${Math.random() * 0.2 + 0.8})`;
+            context.strokeStyle = `hsla(0, 0%, 50%, ${alpha})`;
             context.lineWidth = 5;
-            context.arc(particle.x, particle.y, particle.scale * particleSize, 0, Math.PI * 2, false);
             context.stroke();
-            context.closePath();
             break;
         }
+        context.closePath();
       });
     }
 
