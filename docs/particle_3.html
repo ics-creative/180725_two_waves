@@ -126,6 +126,7 @@
         if (particle.life <= 0) {
           // 配列からも削除
           particles.splice(i, 1);
+          i -= 1;
         }
       }
     }
