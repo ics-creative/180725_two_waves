@@ -1,3 +1,11 @@
+# 記事
+
+[JavaScriptで取り組むクリエイティブコーディング – パーティクル表現入門 \- ICS MEDIA](https://ics.media/entry/18835)
+
+# スライド資料
+
+https://www.slideshare.net/clockmaker_jp/javascriptwebgl-107429033
+
 # URL
 
 - [Line](https://ics-creative.github.io/180725_two_waves/line.html)
