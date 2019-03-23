@@ -41,9 +41,9 @@
       requestAnimationFrame(tick);
 
       // パーティクルを発生
-      emitParticles();
+      emit();
       // パーティクルを更新
-      updateParticles();
+      update();
       // 画面を更新する
       draw();
     }
@@ -59,30 +59,20 @@
 
 
     // パーティクルを発生させます
-    function emitParticles() {
-      // パーティクルの生成
-      for (let i = 0; i < 1; i++) {
-        // オブジェクトの作成
-        const particle = {};
-        // パーティクルの発生場所
-        particle.x = stageW * Math.random();
-        particle.y = stageH * 3 / 4;
-        // 動的にプロパティーを追加します。
-        // 速度
-        particle.vx = 10 * (Math.random() - 0.5);
-        particle.vy = 30 * (Math.random() - 0.5);
-        // 寿命
-        particle.life = MAX_LIFE;
+    function emit() {
+      // オブジェクトの作成
+      const particle = {
+        x: stageW * Math.random(), // パーティクルの発生場所(X)
+        y: stageH * 3 / 4, // パーティクルの発生場所(Y)
+        vy: 30 * (Math.random() - 0.5), // 速度
+        life: MAX_LIFE, // 寿命
+      };
 
-        // パーティクルのシェイプ
-        particle.type = Math.floor(Math.random() * 2).toString();
-
-        particles.push(particle);
-      }
+      particles.push(particle);
     }
 
     // パーティクルを更新します
-    function updateParticles() {
+    function update() {
       // パーティクルの計算を行う
       for (let i = 0; i < particles.length; i++) {
         // オブジェクトの作成
@@ -90,12 +80,9 @@
         // 重力
         particle.vy -= 1;
         // 摩擦
-        particle.vx *= 0.92;
         particle.vy *= 0.92;
         // 速度を位置に適用
-        particle.x += particle.vx;
         particle.y += particle.vy;
-
 
         // パーティクルのサイズをライフ依存にする
         const scale = particle.life / MAX_LIFE;
@@ -106,22 +93,24 @@
         if (particle.life <= 0) {
           // 配列からも削除
           particles.splice(i, 1);
+          i -= 1;
         }
       }
     }
 
 
-    /** 描画します。 */
-    function draw(time) {
+    // 描画します
+    function draw() {
       // 画面をリセット
       context.clearRect(0, 0, stageW, stageH);
-      context.globalCompositeOperation = 'lighter';
 
       particles.forEach(particle => {
-
         context.beginPath();
+        // 白い色を設定
         context.fillStyle = `white`;
-        context.arc(particle.x, particle.y, particle.scale * 100, 0, Math.PI * 2, false);
+        // 円を描く
+        context.arc(particle.x, particle.y, 50 * particle.scale, 0, Math.PI * 2, false);
+        // 形状に沿って塗る
         context.fill();
         context.closePath();
       });

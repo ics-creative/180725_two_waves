@@ -26,7 +26,6 @@
     let stageW = 0;
     let stageH = 0;
 
-    let count = 0; // tick イベントの回数
     let MAX_LIFE = 80; // 寿命の最大値
     const particles = []; // 配列でパーティクルを管理
 
@@ -42,14 +41,14 @@
       requestAnimationFrame(tick);
 
       // パーティクルを更新
-      updateParticles();
+      update();
       // 画面を更新する
       draw();
     }
 
     // パーティクルを発生
-    emitParticles();
-    setInterval(emitParticles, 1500);
+    emit();
+    setInterval(emit, 1500);
 
     /** リサイズ時のイベントです。 */
     function resize() {
@@ -62,30 +61,21 @@
 
 
     // パーティクルを発生させます
-    function emitParticles() {
-      // パーティクルの生成
-      for (let i = 0; i < 1; i++) {
-        // カウントの更新
-        count += 1;
-        // オブジェクトの作成
-        const particle = {};
-        // パーティクルの発生場所
-        particle.x = stageW * 0.5;
-        particle.y = stageH * 4 / 5;
-        // 動的にプロパティーを追加します。
-        // 速度
-        particle.vx = 0;
-        particle.vy = 0;
-        // 寿命
-        particle.life = MAX_LIFE;
+    function emit() {
+      // オブジェクトの作成
+      const particle = {
+        x: stageW * 0.5, // パーティクルの発生場所(X)
+        y: stageH * 4 / 5, // パーティクルの発生場所(Y)
+        vy: 0, // 速度
+        life: MAX_LIFE, // 寿命
+      };
 
-
-        particles.push(particle);
-      }
+      // 配列に保存
+      particles.push(particle);
     }
 
     // パーティクルを更新します
-    function updateParticles() {
+    function update() {
       // パーティクルの計算を行う
       for (let i = 0; i < particles.length; i++) {
         // オブジェクトの作成
@@ -93,10 +83,8 @@
         // 重力
         particle.vy -= 1;
         // 摩擦
-        particle.vx *= 0.92;
         particle.vy *= 0.92;
         // 速度を位置に適用
-        particle.x += particle.vx;
         particle.y += particle.vy;
 
 
@@ -106,21 +94,24 @@
         if (particle.life <= 0) {
           // 配列からも削除
           particles.splice(i, 1);
+          i -= 1;
         }
       }
     }
 
 
-    /** 描画します。 */
-    function draw(time) {
+    // 描画します
+    function draw() {
       // 画面をリセット
       context.clearRect(0, 0, stageW, stageH);
-      context.globalCompositeOperation = 'lighter';
 
       particles.forEach(particle => {
         context.beginPath();
+        // 白い色を設定
         context.fillStyle = `white`;
+        // 円を描く
         context.arc(particle.x, particle.y, 100, 0, Math.PI * 2, false);
+        // 形状に沿って塗る
         context.fill();
         context.closePath();
       });

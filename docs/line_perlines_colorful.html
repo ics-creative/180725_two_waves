@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="ja" dir="ltr">
+<html>
 <head>
   <meta charset="UTF-8"/>
-  <meta name="google" content="notranslate" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sample - ICS MEDIA</title>
   <style>
@@ -24,10 +23,12 @@
 
   <script src="libs/perlin.js"></script>
   <script>
-    let stageW = 0;
-    let stageH = 0;
+    let stageW = 0; // 画面の幅
+    let stageH = 0; // 画面の高さ
 
+    // canvas要素の参照を取得
     const canvas = document.querySelector('canvas');
+    // 2Dの描画命令群を取得
     const context = canvas.getContext('2d');
 
     noise.seed(Math.random());
@@ -43,36 +44,28 @@
       draw(time);
     }
 
-    /** リサイズ時のイベントです。 */
-    function resize() {
-      stageW = innerWidth * devicePixelRatio;
-      stageH = innerHeight * devicePixelRatio;
-
-      canvas.width = stageW;
-      canvas.height = stageH;
-    }
 
     /** 描画します。 */
     function draw(time) {
       // 画面をリセット
       context.clearRect(0, 0, stageW, stageH);
-      context.lineWidth = 2;
+      context.lineWidth = 1;
 
       const amplitude = stageH / 2; // 振幅（縦幅)の大きさ
-      const lineNum = 80; // ラインの数
-      const segmentNum = 80; // 分割数
+      const lineNum = 150; // ラインの数
+      const segmentNum = 150; // 分割数
 
-      [...new Array(lineNum).keys()].forEach(j => {
+      [...Array(lineNum).keys()].forEach(j => {
         const coefficient = 50 + j;
 
         context.beginPath();
 
-  const h = Math.round(j / lineNum * 360); // 色相
-  const s = 100; // 彩度
-  const l = Math.round(j / lineNum * 100); // 明度
-  context.strokeStyle = `hsl(${h}, ${s}%, ${l}%)`;
+        const h = Math.round(j / lineNum * 360); // 色相
+        const s = 100; // 彩度
+        const l = Math.round(j / lineNum * 100); // 明度
+        context.strokeStyle = `hsl(${h}, ${s}%, ${l}%)`;
 
-        [...new Array(segmentNum).keys()].forEach(i => {
+        [...Array(segmentNum).keys()].forEach(i => {
 
           const x = i / (segmentNum - 1) * stageW;
 
@@ -88,6 +81,15 @@
         });
         context.stroke();
       });
+    }
+
+    /** リサイズ時のイベントです。 */
+    function resize() {
+      stageW = innerWidth * devicePixelRatio;
+      stageH = innerHeight * devicePixelRatio;
+
+      canvas.width = stageW;
+      canvas.height = stageH;
     }
   </script>
 </body>

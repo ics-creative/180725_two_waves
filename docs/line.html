@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="ja" dir="ltr">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="google" content="notranslate" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sample - ICS MEDIA</title>
   <style>
@@ -23,21 +22,35 @@
   <canvas></canvas>
 
   <script>
-    let stageW = 0;
-    let stageH = 0;
 
+    let stageW = 0; // 画面の幅
+    let stageH = 0; // 画面の高さ
+
+    // canvas要素の参照を取得
     const canvas = document.querySelector('canvas');
+    // 2Dの描画命令群を取得
     const context = canvas.getContext('2d');
 
-    resize();
     tick();
+    resize();
     window.addEventListener('resize', resize);
 
-    /** エンターフレームのタイミングです。 */
+    /** アニメーションフレームのタイミングです。 */
     function tick() {
       requestAnimationFrame(tick);
-      const time = Date.now() / 1000;
-      draw(time);
+      draw();
+    }
+
+    /** 描画します。 */
+    function draw() {
+      // 画面をリセット
+      context.clearRect(0, 0, stageW, stageH);
+      context.lineWidth = 10; // 線の太さ
+      context.beginPath(); // 線の開始
+      context.strokeStyle = 'white'; // 線の色
+      context.moveTo(0, stageH / 2); // 開始点
+      context.lineTo(stageW, stageH / 2); // 終了点
+      context.stroke(); // 線を描く
     }
 
     /** リサイズ時のイベントです。 */
@@ -47,18 +60,6 @@
 
       canvas.width = stageW;
       canvas.height = stageH;
-    }
-
-    /** 描画します。 */
-    function draw(time) {
-      // 画面をリセット
-      context.clearRect(0, 0, stageW, stageH);
-      context.lineWidth = 10;
-      context.beginPath();
-      context.strokeStyle = `white`;
-      context.moveTo(0, stageH / 2);
-      context.lineTo(stageW, stageH / 2);
-      context.stroke();
     }
   </script>
 </body>
