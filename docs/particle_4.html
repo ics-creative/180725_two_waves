@@ -30,8 +30,16 @@
       const MAX_LIFE = 50; // 寿命の最大値
       const PARTICLE_SIZE = 25; // パーティクルのサイズ（定数）
       const emitPerFrame = 3; // フレームあたりの粒子発生数
-      const particles = []; // 配列でパーティクルを管理
-      const objectPool = []; // オブジェクトプール
+      /**
+       * 配列でパーティクルを管理
+       * @type {Particle[]}
+       */
+      const particles = [];
+      /**
+       * オブジェクトプール
+       * @type {Particle[]}
+       */
+      const objectPool = [];
 
       const canvas = document.querySelector("canvas");
       const context = canvas.getContext("2d");
@@ -57,9 +65,9 @@
       tick();
       window.addEventListener("resize", resize);
 
-      /** エンターフレームのタイミングです。 */
+      /** フレーム更新のタイミングです。 */
       function tick() {
-        requestAnimationFrame(tick);
+        setTimeout(tick, 16); // RAFだとブラウザ互換性に課題ありのためsetTimeoutを使用
 
         // パーティクルを発生
         emit();

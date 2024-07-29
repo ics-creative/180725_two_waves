@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="google" content="notranslate" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Sample - ICS MEDIA</title>
+    <title>Particle Demo - ICS MEDIA</title>
     <style>
       body {
         margin: 0;
@@ -26,7 +26,6 @@
       let stageW = 0;
       let stageH = 0;
 
-      let count = 0; // tick イベントの回数
       let MAX_LIFE = 100; // 寿命の最大値
       const particles = []; // 配列でパーティクルを管理
 
@@ -37,9 +36,9 @@
       tick();
       window.addEventListener("resize", resize);
 
-      /** エンターフレームのタイミングです。 */
+      /** フレーム更新のタイミングです。 */
       function tick() {
-        requestAnimationFrame(tick);
+        setTimeout(tick, 16); // RAFだとブラウザ互換性に課題ありのためsetTimeoutを使用
 
         // パーティクルを更新
         updateParticles();

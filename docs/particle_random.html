@@ -39,8 +39,16 @@
       const MAX_LIFE = 50; // 寿命の最大値
       const PARTICLE_SIZE = 25; // パーティクルのサイズ（定数）
       const emitPerFrame = 2; // フレームあたりの粒子発生数
-      const particles = []; // 配列でパーティクルを管理
-      const objectPool = []; // オブジェクトプール
+      /**
+       * 配列でパーティクルを管理
+       * @type {Particle[]}
+       */
+      const particles = [];
+      /**
+       * オブジェクトプール
+       * @type {Particle[]}
+       */
+      const objectPool = [];
 
       const canvas = document.querySelector("canvas");
       const context = canvas.getContext("2d");
@@ -68,7 +76,7 @@
 
       /** エンターフレームのタイミングです。 */
       function tick() {
-        requestAnimationFrame(tick);
+        setTimeout(tick, 16); // RAFだとブラウザ互換性に課題ありのためsetTimeoutを使用
 
         // パーティクルを発生
         emit();
@@ -92,7 +100,8 @@
       // パーティクルを発生させます
       function emit() {
         // パーティクルの生成
-        [...Array(emitPerFrame).keys()].forEach((i) => {
+
+        for (let i = 0; i < emitPerFrame; i++) {
           // オブジェクトの作成
           const particle = fromPool();
 
@@ -112,7 +121,7 @@
           particle.type = Math.floor(Math.random() * 2).toString();
 
           particles.push(particle);
-        });
+        }
       }
 
       // パーティクルを更新します
@@ -146,7 +155,7 @@
       }
 
       // 描画します
-      function draw(time) {
+      function draw() {
         // 画面をリセット
         context.clearRect(0, 0, stageW, stageH);
         context.globalCompositeOperation = "lighter";
