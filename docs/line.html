@@ -1,66 +1,65 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sample - ICS MEDIA</title>
-  <style>
-    body {
-      margin: 0;
-      height: 0;
-      overflow: hidden;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sample - ICS MEDIA</title>
+    <style>
+      body {
+        margin: 0;
+        height: 0;
+        overflow: hidden;
+      }
 
-    canvas {
-      width: 100vw;
-      height: 100vh;
-      background: black;
-    }
-  </style>
-</head>
-<body>
-  <canvas></canvas>
+      canvas {
+        width: 100vw;
+        height: 100vh;
+        background: black;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas></canvas>
 
-  <script>
+    <script>
+      let stageW = 0; // 画面の幅
+      let stageH = 0; // 画面の高さ
 
-    let stageW = 0; // 画面の幅
-    let stageH = 0; // 画面の高さ
+      // canvas要素の参照を取得
+      const canvas = document.querySelector("canvas");
+      // 2Dの描画命令群を取得
+      const context = canvas.getContext("2d");
 
-    // canvas要素の参照を取得
-    const canvas = document.querySelector('canvas');
-    // 2Dの描画命令群を取得
-    const context = canvas.getContext('2d');
+      tick();
+      resize();
+      window.addEventListener("resize", resize);
 
-    tick();
-    resize();
-    window.addEventListener('resize', resize);
+      /** アニメーションフレームのタイミングです。 */
+      function tick() {
+        requestAnimationFrame(tick);
+        draw();
+      }
 
-    /** アニメーションフレームのタイミングです。 */
-    function tick() {
-      requestAnimationFrame(tick);
-      draw();
-    }
+      /** 描画します。 */
+      function draw() {
+        // 画面をリセット
+        context.clearRect(0, 0, stageW, stageH);
+        context.lineWidth = 10; // 線の太さ
+        context.beginPath(); // 線の開始
+        context.strokeStyle = "white"; // 線の色
+        context.moveTo(0, stageH / 2); // 開始点
+        context.lineTo(stageW, stageH / 2); // 終了点
+        context.stroke(); // 線を描く
+      }
 
-    /** 描画します。 */
-    function draw() {
-      // 画面をリセット
-      context.clearRect(0, 0, stageW, stageH);
-      context.lineWidth = 10; // 線の太さ
-      context.beginPath(); // 線の開始
-      context.strokeStyle = 'white'; // 線の色
-      context.moveTo(0, stageH / 2); // 開始点
-      context.lineTo(stageW, stageH / 2); // 終了点
-      context.stroke(); // 線を描く
-    }
+      /** リサイズ時のイベントです。 */
+      function resize() {
+        stageW = innerWidth * devicePixelRatio;
+        stageH = innerHeight * devicePixelRatio;
 
-    /** リサイズ時のイベントです。 */
-    function resize() {
-      stageW = innerWidth * devicePixelRatio;
-      stageH = innerHeight * devicePixelRatio;
-
-      canvas.width = stageW;
-      canvas.height = stageH;
-    }
-  </script>
-</body>
+        canvas.width = stageW;
+        canvas.height = stageH;
+      }
+    </script>
+  </body>
 </html>

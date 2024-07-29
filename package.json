@@ -1,0 +1,10 @@
+{
+  "name": "180725_two_waves",
+  "private": true,
+  "devDependencies": {
+    "prettier": "^3.3.3"
+  },
+  "scripts": {
+    "format": "prettier --write docs/**/*.html"
+  }
+}

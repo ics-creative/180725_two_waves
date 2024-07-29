@@ -1,86 +1,84 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sample - ICS MEDIA</title>
-  <style>
-    body {
-      margin: 0;
-      height: 0;
-      overflow: hidden;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sample - ICS MEDIA</title>
+    <style>
+      body {
+        margin: 0;
+        height: 0;
+        overflow: hidden;
+      }
 
-    canvas {
-      width: 100vw;
-      height: 100vh;
-      background: black;
-    }
-  </style>
-</head>
-<body>
-  <canvas></canvas>
+      canvas {
+        width: 100vw;
+        height: 100vh;
+        background: black;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas></canvas>
 
-  <script>
-    let stageW = 0; // 画面の幅
-    let stageH = 0; // 画面の高さ
+    <script>
+      let stageW = 0; // 画面の幅
+      let stageH = 0; // 画面の高さ
 
-    // canvas要素の参照を取得
-    const canvas = document.querySelector('canvas');
-    // 2Dの描画命令群を取得
-    const context = canvas.getContext('2d');
+      // canvas要素の参照を取得
+      const canvas = document.querySelector("canvas");
+      // 2Dの描画命令群を取得
+      const context = canvas.getContext("2d");
 
-    resize();
-    tick();
-    window.addEventListener('resize', resize);
+      resize();
+      tick();
+      window.addEventListener("resize", resize);
 
-    /** エンターフレームのタイミングです。 */
-    function tick() {
-      requestAnimationFrame(tick);
-      const time = Date.now() / 1000;
-      draw(time);
-    }
+      /** エンターフレームのタイミングです。 */
+      function tick() {
+        requestAnimationFrame(tick);
+        const time = Date.now() / 1000;
+        draw(time);
+      }
 
-    /** 描画します。 */
-    function draw(time) {
-      // 画面をリセット
-      context.clearRect(0, 0, stageW, stageH);
-      context.lineWidth = 2;
+      /** 描画します。 */
+      function draw(time) {
+        // 画面をリセット
+        context.clearRect(0, 0, stageW, stageH);
+        context.lineWidth = 2;
 
-      const segmentNum = 80;
-      const amplitude = stageH / 3;
-      const lineNum = 10;
+        const segmentNum = 80;
+        const amplitude = stageH / 3;
+        const lineNum = 10;
 
-      [...Array(lineNum).keys()].forEach(j => {
+        [...Array(lineNum).keys()].forEach((j) => {
+          context.beginPath();
 
-        context.beginPath();
+          [...Array(segmentNum).keys()].forEach((i) => {
+            const x = (i / (segmentNum - 1)) * stageW;
+            const radian = ((i + j) / segmentNum) * Math.PI + time;
+            const y = amplitude * Math.sin(radian) + stageH / 2;
 
-        [...Array(segmentNum).keys()].forEach(i => {
+            context.strokeStyle = `hsl(${Math.round((j / lineNum) * 360)}, 100%, 50%)`;
 
-          const x = i / (segmentNum - 1) * stageW;
-          const radian = ((i + j) / segmentNum) * Math.PI + time;
-          const y = amplitude * Math.sin(radian) + stageH / 2;
-
-          context.strokeStyle = `hsl(${Math.round(j / lineNum * 360)}, 100%, 50%)`;
-
-          if (i === 0) {
-            context.moveTo(x, y);
-          } else {
-            context.lineTo(x, y);
-          }
+            if (i === 0) {
+              context.moveTo(x, y);
+            } else {
+              context.lineTo(x, y);
+            }
+          });
+          context.stroke();
         });
-        context.stroke();
-      });
-    }
+      }
 
-    /** リサイズ時のイベントです。 */
-    function resize() {
-      stageW = innerWidth * devicePixelRatio;
-      stageH = innerHeight * devicePixelRatio;
+      /** リサイズ時のイベントです。 */
+      function resize() {
+        stageW = innerWidth * devicePixelRatio;
+        stageH = innerHeight * devicePixelRatio;
 
-      canvas.width = stageW;
-      canvas.height = stageH;
-    }
-  </script>
-</body>
+        canvas.width = stageW;
+        canvas.height = stageH;
+      }
+    </script>
+  </body>
 </html>

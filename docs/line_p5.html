@@ -1,64 +1,63 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sample - ICS MEDIA</title>
-  <style>
-    body {
-      margin: 0;
-      height: 0;
-      overflow: hidden;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sample - ICS MEDIA</title>
+    <style>
+      body {
+        margin: 0;
+        height: 0;
+        overflow: hidden;
+      }
 
-    canvas {
-      width: 100vw;
-      height: 100vh;
-      background: black;
-    }
-  </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.min.js"></script>
-</head>
-<body>
-  <script>
-    function setup() {
-      createCanvas(innerWidth, innerHeight);
-    }
+      canvas {
+        width: 100vw;
+        height: 100vh;
+        background: black;
+      }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.min.js"></script>
+  </head>
+  <body>
+    <script>
+      function setup() {
+        createCanvas(innerWidth, innerHeight);
+      }
 
-    function draw() {
-      colorMode(HSB);
-      background(0, 0, 0);
-      noFill();
+      function draw() {
+        colorMode(HSB);
+        background(0, 0, 0);
+        noFill();
 
-      const lineNum = 100;
-      const segmentNum = 100;
+        const lineNum = 100;
+        const segmentNum = 100;
 
-      [...Array(lineNum).keys()].forEach(j => {
-        const time = Date.now() / 5000;
-        const coefficient = 50 + j;
+        [...Array(lineNum).keys()].forEach((j) => {
+          const time = Date.now() / 5000;
+          const coefficient = 50 + j;
 
-        const h = Math.round(j / lineNum * 60) + 280; // 色相
-        const s = 100; // 彩度
-        const l = Math.round(j / lineNum * 75) + 25; // 明度
+          const h = Math.round((j / lineNum) * 60) + 280; // 色相
+          const s = 100; // 彩度
+          const l = Math.round((j / lineNum) * 75) + 25; // 明度
 
-        beginShape();
-        stroke(h, s, l);
+          beginShape();
+          stroke(h, s, l);
 
-        [...Array(segmentNum).keys()].forEach(i => {
+          [...Array(segmentNum).keys()].forEach((i) => {
+            const x = (i / (segmentNum - 1)) * width;
 
-          const x = i / (segmentNum - 1) * width;
+            const px = i / coefficient;
+            const py = j / 50 + time;
 
-          const px = i / coefficient;
-          const py = (j / 50 + time);
+            const randomValue = noise(px, py);
+            const y = randomValue * height;
+            vertex(x, y);
+          });
 
-          const randomValue = noise(px, py);
-          const y = randomValue * height;
-          vertex(x, y);
+          endShape();
         });
-
-        endShape();
-      });
-    }
-  </script>
-</body>
+      }
+    </script>
+  </body>
 </html>
