@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="ja" dir="ltr">
+<html>
   <head>
     <meta charset="UTF-8" />
-    <meta name="google" content="notranslate" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Object Pool - ICS MEDIA</title>
     <style>
@@ -30,7 +30,7 @@
       const TYPE = ["normal", "center", "center-strong", "edge"];
       let randomType = TYPE[0]; // デフォルト
 
-      // ハッシュからランダム計算方法を切り替える
+      // URLのハッシュからランダム計算方法を切り替える
       if (location.hash) {
         const id = Number(location.hash.split("#").join(""));
         randomType = TYPE[id];
@@ -160,19 +160,20 @@
         context.clearRect(0, 0, stageW, stageH);
         context.globalCompositeOperation = "lighter";
 
-        particles.forEach((particle) => {
+        for (let i = 0; i < particles.length; i++) {
+          const particle = particles[i];
           context.restore();
 
           // 点滅ロジック
           const alpha = Math.random() * 0.2 + 0.8;
           context.beginPath();
           context.arc(
-            particle.x,
-            particle.y,
-            particle.scale * particleSize,
-            0,
-            Math.PI * 2,
-            false,
+                  particle.x,
+                  particle.y,
+                  particle.scale * particleSize,
+                  0,
+                  Math.PI * 2,
+                  false,
           );
 
           switch (particle.type) {
@@ -187,7 +188,7 @@
               break;
           }
           context.closePath();
-        });
+        }
       }
 
       function toPool(particle) {
