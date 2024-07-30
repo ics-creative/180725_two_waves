@@ -148,15 +148,16 @@
             false,
           );
 
-          // 点滅ロジック
+          // 点滅ロジック 0.8〜1.0の間で乱数を得る
           const alpha = Math.random() * 0.2 + 0.8;
 
           switch (particle.type) {
-            case "0":
+            case "0": // 塗りつぶした円「●」を描画
               context.fillStyle = `hsla(0, 0%, 50%, ${alpha})`;
               context.fill();
               break;
-            case "1":
+
+            case "1": // 線で円「○」を描画
               context.strokeStyle = `hsla(0, 0%, 50%, ${alpha})`;
               context.lineWidth = 5;
               context.stroke();

@@ -24,8 +24,9 @@
     <script>
       let stageW = 0;
       let stageH = 0;
+      let frameCount = 0;
 
-      let MAX_LIFE = 80; // 寿命の最大値
+      const MAX_LIFE = 80; // 寿命の最大値
       const particles = []; // 配列でパーティクルを管理
 
       const canvas = document.querySelector("canvas");
@@ -39,15 +40,18 @@
       function tick() {
         setTimeout(tick, 16); // RAFだとブラウザ互換性に課題ありのためsetTimeoutを使用
 
+        if (frameCount % 100 === 0) {
+          // 100フレームに1回の頻度で
+          // パーティクルを発生
+          emit();
+        }
+        frameCount++;
+
         // パーティクルを更新
         update();
         // 画面を更新する
         draw();
       }
-
-      // パーティクルを発生
-      emit();
-      setInterval(emit, 1500);
 
       /** リサイズ時のイベントです。 */
       function resize() {
@@ -62,6 +66,7 @@
       function emit() {
         // オブジェクトの作成
         const particle = {
+          // stageW, stageH は画面の幅と高さ
           x: stageW * 0.5, // パーティクルの発生場所(X)
           y: (stageH * 4) / 5, // パーティクルの発生場所(Y)
           vy: 0, // 速度

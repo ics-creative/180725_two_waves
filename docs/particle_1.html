@@ -25,6 +25,7 @@
     <script>
       let stageW = 0;
       let stageH = 0;
+      let frameCount = 0;
 
       let MAX_LIFE = 100; // 寿命の最大値
       const particles = []; // 配列でパーティクルを管理
@@ -40,15 +41,18 @@
       function tick() {
         setTimeout(tick, 16); // RAFだとブラウザ互換性に課題ありのためsetTimeoutを使用
 
+        if (frameCount % 100 === 0) {
+          // 100フレームに1回の頻度で
+          // パーティクルを発生
+          emit();
+        }
+        frameCount++;
+
         // パーティクルを更新
-        updateParticles();
+        update();
         // 画面を更新する
         draw();
       }
-
-      // パーティクルを発生
-      emitParticles();
-      setInterval(emitParticles, 1500);
 
       /** リサイズ時のイベントです。 */
       function resize() {
@@ -60,7 +64,7 @@
       }
 
       // パーティクルを発生させます
-      function emitParticles() {
+      function emit() {
         // オブジェクトの作成
         const particle = {
           x: stageW * 0.5, // パーティクルの発生場所(X)
@@ -75,7 +79,7 @@
       }
 
       // パーティクルを更新します
-      function updateParticles() {
+      function update() {
         // パーティクルの計算を行う
         for (let i = 0; i < particles.length; i++) {
           // オブジェクトの作成
@@ -114,17 +118,16 @@
           context.fillStyle = `white`;
           // 円を描く
           context.arc(
-                  particle.x,
-                  particle.y,
-                  50 * particle.scale,
-                  0,
-                  Math.PI * 2,
-                  false,
+            particle.x,
+            particle.y,
+            50 * particle.scale,
+            0,
+            Math.PI * 2,
+            false,
           );
           // 形状に沿って塗る
           context.fill();
           context.closePath();
-
         }
       }
     </script>
